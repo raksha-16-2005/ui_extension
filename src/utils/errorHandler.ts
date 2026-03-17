@@ -144,10 +144,14 @@ export async function executeErrorTrigger(
         await result
       } catch (error) {
         onError(captureError(error))
+        throw error // Re-throw to fire as red error in console
       }
     }
   } catch (error) {
     // Catch synchronous errors
     onError(captureError(error))
+    throw error // Re-throw to fire as red error in console
+    onError(captureError(error))
+    throw error // Re-throw to fire as red error in console
   }
 }

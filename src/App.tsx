@@ -150,21 +150,29 @@ function App() {
       _colno: number,
       error: Error
     ) => {
-      // Log to browser console
-      console.error(error || new Error(message))
+      const err = error || new Error(message)
       
-      const capturedErr = captureError(error || new Error(message))
+      // Capture the error for dashboard display
+      const capturedErr = captureError(err)
       setCapturedError(capturedErr)
+      
+      // Re-throw to make it appear as a real error in the browser console
+      setTimeout(() => {
+        throw err
+      }, 0)
+      
       return true // Prevent default error handling
     }
 
     // Handle unhandled promise rejections
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      // Log to browser console
-      console.error("Unhandled Promise Rejection:", event.reason)
-      
+      // Capture the error for dashboard display
       const capturedErr = captureError(event.reason)
       setCapturedError(capturedErr)
+      
+      // Log the error to browser console as a real error
+      console.error(event.reason)
+      
       event.preventDefault() // Prevent default rejection handling
     }
 
@@ -218,8 +226,12 @@ function App() {
         enableApiDelay ? 600 : 0  // 600ms delay if enabled
       )
     } catch (error) {
-      // Error already captured by executeErrorTrigger
-      console.error('Error execution failed:', error)
+      // Log the actual error in red to the browser console
+      if (error instanceof Error) {
+        console.error(error)
+      } else {
+        console.error(new Error(String(error)))
+      }
     } finally {
       setIsLoading(false)
     }
