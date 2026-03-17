@@ -22,12 +22,12 @@ export function Header({
     >
       <div className="space-y-3">
         <div className="flex items-center gap-3">
-          <div className="w-1 h-8 bg-gradient-to-b from-emerald-400 to-emerald-600 rounded-full"></div>
-          <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-white to-emerald-100 bg-clip-text text-transparent">
+          <div className="w-1 h-8 bg-gradient-to-b from-emerald-500 to-emerald-600 dark:from-emerald-400 dark:to-emerald-600 rounded-full"></div>
+          <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-emerald-600 to-emerald-700 dark:from-white dark:to-emerald-100 bg-clip-text text-transparent">
             {title}
           </h1>
         </div>
-        <p className="text-sm text-slate-400 font-medium uppercase tracking-wider">{subtitle}</p>
+        <p className="text-sm text-slate-600 dark:text-slate-400 font-medium uppercase tracking-wider">{subtitle}</p>
       </div>
     </motion.div>
   )

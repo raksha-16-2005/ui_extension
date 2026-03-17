@@ -151,7 +151,5 @@ export async function executeErrorTrigger(
     // Catch synchronous errors
     onError(captureError(error))
     throw error // Re-throw to fire as red error in console
-    onError(captureError(error))
-    throw error // Re-throw to fire as red error in console
   }
 }

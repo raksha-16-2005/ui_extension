@@ -156,12 +156,10 @@ function App() {
       const capturedErr = captureError(err)
       setCapturedError(capturedErr)
       
-      // Re-throw to make it appear as a real error in the browser console
-      setTimeout(() => {
-        throw err
-      }, 0)
+      // Let the error show in console naturally without explicit logging
+      // This prevents duplicate error messages
       
-      return true // Prevent default error handling
+      return false // Let browser handle default error display
     }
 
     // Handle unhandled promise rejections
@@ -226,12 +224,15 @@ function App() {
         enableApiDelay ? 600 : 0  // 600ms delay if enabled
       )
     } catch (error) {
-      // Log the actual error in red to the browser console
-      if (error instanceof Error) {
-        console.error(error)
-      } else {
-        console.error(new Error(String(error)))
-      }
+      // Re-throw to display error in browser console
+      // Global error handler will capture it for dashboard display
+      setTimeout(() => {
+        if (error instanceof Error) {
+          throw error
+        } else {
+          throw new Error(String(error))
+        }
+      }, 0)
     } finally {
       setIsLoading(false)
     }

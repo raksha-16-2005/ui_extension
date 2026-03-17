@@ -71,15 +71,15 @@ Column: ${selectedError.column || 'unknown'}`
         duration: 0.5, 
         delay: 0.15
       }}
-      className="h-full flex flex-col rounded-2xl border border-emerald-500/15 bg-gradient-to-b from-slate-950 to-slate-900 overflow-hidden"
+      className="h-full flex flex-col rounded-2xl border border-emerald-500/15 dark:border-emerald-500/15 bg-gradient-to-b from-white to-gray-50 dark:from-slate-950 dark:to-slate-900 overflow-hidden"
     >
       {/* Console Header */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-900/80 border-b border-emerald-500/15 px-5 py-4 flex items-center justify-between flex-shrink-0" >
+      <div className="bg-gradient-to-r from-gray-50 to-white dark:from-slate-900 dark:to-slate-900/80 border-b border-gray-200 dark:border-emerald-500/15 px-5 py-4 flex items-center justify-between flex-shrink-0" >
         <div className="flex items-center gap-3">
           <motion.span
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="text-emerald-400 font-bold text-sm"
+            className="text-emerald-600 dark:text-emerald-400 font-bold text-sm"
           >
             ›
           </motion.span>
