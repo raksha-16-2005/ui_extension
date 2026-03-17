@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button'
 import { Header } from '@/components/Header'
 import { ErrorSection } from '@/components/ErrorSection'
 import { ConsolePanel } from '@/components/ConsolePanel'
-import { ErrorHistory } from '@/components/ErrorHistory'
 import { motion } from 'framer-motion'
 import type { ErrorItem } from '@/components/ErrorCard'
 import { JSErrorType } from '@/utils/types'
@@ -130,7 +129,6 @@ function App() {
   const [selectedError, setSelectedError] = useState<ErrorItem | null>(null)
   const [capturedError, setCapturedError] = useState<CapturedError | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [errorHistory, setErrorHistory] = useState<CapturedError[]>([])
   const [enableApiDelay, setEnableApiDelay] = useState(false)
 
   useEffect(() => {
@@ -152,19 +150,21 @@ function App() {
       _colno: number,
       error: Error
     ) => {
+      // Log to browser console
+      console.error(error || new Error(message))
+      
       const capturedErr = captureError(error || new Error(message))
       setCapturedError(capturedErr)
-      // Add to error history
-      setErrorHistory(prev => [capturedErr, ...prev.slice(0, 49)]) // Keep last 50 errors
       return true // Prevent default error handling
     }
 
     // Handle unhandled promise rejections
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      // Log to browser console
+      console.error("Unhandled Promise Rejection:", event.reason)
+      
       const capturedErr = captureError(event.reason)
       setCapturedError(capturedErr)
-      // Add to error history
-      setErrorHistory(prev => [capturedErr, ...prev.slice(0, 49)]) // Keep last 50 errors
       event.preventDefault() // Prevent default rejection handling
     }
 
@@ -214,8 +214,6 @@ function App() {
         triggerName, 
         (capturedErr) => {
           setCapturedError(capturedErr)
-          // Add to error history
-          setErrorHistory(prev => [capturedErr, ...prev.slice(0, 49)]) // Keep last 50 errors
         },
         enableApiDelay ? 600 : 0  // 600ms delay if enabled
       )
@@ -336,25 +334,12 @@ function App() {
           {/* Middle & Right Columns: Console and History */}
           <div className="lg:col-span-3 space-y-8">
             {/* Console Output - Takes full width */}
-            <div className="h-full min-h-96">
+            <div className="h-full">
               <ConsolePanel 
                 selectedError={selectedError} 
                 capturedError={capturedError}
                 isLoading={isLoading}
                 onCopy={handleCopy}
-              />
-            </div>
-
-            {/* Error History */}
-            <div className="h-full min-h-72">
-              <ErrorHistory
-                errors={errorHistory}
-                onSelectError={(error) => {
-                  setCapturedError(error)
-                  setSelectedError(null)
-                }}
-                onClearHistory={() => setErrorHistory([])}
-                selectedErrorId={capturedError?.id}
               />
             </div>
           </div>
