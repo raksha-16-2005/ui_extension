@@ -116,7 +116,7 @@ const mockErrors = {
     {
       id: 'http-4',
       type: JSErrorType.CUSTOM_ERROR,
-      message: 'HTTP Error 403: Forbidden - Access denied',
+      message: 'HTTP Error 401: Forbidden - Access denied',
       line: 312,
       column: 14,
       source: 'src/api/auth.ts',
@@ -168,10 +168,8 @@ function App() {
       const capturedErr = captureError(event.reason)
       setCapturedError(capturedErr)
       
-      // Log the error to browser console as a real error
-      console.error(event.reason)
-      
-      event.preventDefault() // Prevent default rejection handling
+      // Don't prevent default - let the error remain uncaught
+      // This shows the error as coming from its original source file
     }
 
     window.addEventListener('error', (event) => {
@@ -223,16 +221,6 @@ function App() {
         },
         enableApiDelay ? 600 : 0  // 600ms delay if enabled
       )
-    } catch (error) {
-      // Re-throw to display error in browser console
-      // Global error handler will capture it for dashboard display
-      setTimeout(() => {
-        if (error instanceof Error) {
-          throw error
-        } else {
-          throw new Error(String(error))
-        }
-      }, 0)
     } finally {
       setIsLoading(false)
     }

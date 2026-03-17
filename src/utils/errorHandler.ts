@@ -126,30 +126,19 @@ export async function executeErrorTrigger(
   onError: (error: CapturedError) => void,
   apiDelay: number = 0
 ): Promise<void> {
-  try {
-    // Simulate API delay (optional)
-    if (apiDelay > 0) {
-      await new Promise(resolve => setTimeout(resolve, apiDelay))
-    }
-
-    // Dynamically import the error module
-    const module = await import(`../errors/${triggerName}.js`)
-    
-    // Execute the runError function
-    const result = module.runError()
-
-    // If it returns a promise, handle it
-    if (result instanceof Promise) {
-      try {
-        await result
-      } catch (error) {
-        onError(captureError(error))
-        throw error // Re-throw to fire as red error in console
-      }
-    }
-  } catch (error) {
-    // Catch synchronous errors
-    onError(captureError(error))
-    throw error // Re-throw to fire as red error in console
+  // Simulate API delay (optional)
+  if (apiDelay > 0) {
+    await new Promise(resolve => setTimeout(resolve, apiDelay))
   }
+
+  // Dynamically import the error module
+  const module = await import(`../errors/${triggerName}.js`)
+  
+  // Execute the runError function
+  const result = module.runError()
+
+  // Don't catch the promise - let it become an unhandled rejection
+  // The global unhandledrejection handler in App.tsx will capture it
+  // This way the error shows in console from the error file, not from here
 }
+
