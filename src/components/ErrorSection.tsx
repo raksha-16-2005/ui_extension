@@ -33,7 +33,6 @@ export function ErrorSection({
         staggerChildren: 0.12,
         delayChildren: 0.15,
         duration: 0.5,
-        ease: 'easeOut',
       },
     },
   }
@@ -46,7 +45,6 @@ export function ErrorSection({
       scale: 1,
       transition: { 
         duration: 0.4,
-        ease: 'easeOut'
       },
     },
   }

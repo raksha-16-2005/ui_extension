@@ -41,11 +41,18 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        'cyber-green': '#00ff96',
+        'deep-black': '#050505',
+        'panel-dark': '#0b0f0c',
       },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+      },
+      boxShadow: {
+        'green-glow': '0 0 20px rgba(0, 255, 150, 0.15)',
+        'green-glow-lg': '0 0 40px rgba(0, 255, 150, 0.2)',
       },
     },
   },

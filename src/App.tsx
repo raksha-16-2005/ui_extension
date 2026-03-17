@@ -131,7 +131,6 @@ function App() {
   const [capturedError, setCapturedError] = useState<CapturedError | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [errorHistory, setErrorHistory] = useState<CapturedError[]>([])
-  const [showUnhandledOnly, setShowUnhandledOnly] = useState(false)
   const [enableApiDelay, setEnableApiDelay] = useState(false)
 
   useEffect(() => {
@@ -148,9 +147,9 @@ function App() {
     // Handle synchronous errors
     const handleWindowError = (
       message: string,
-      source: string,
-      lineno: number,
-      colno: number,
+      _source: string,
+      _lineno: number,
+      _colno: number,
       error: Error
     ) => {
       const capturedErr = captureError(error || new Error(message))
@@ -279,45 +278,47 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        {/* Page Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-        >
-          <Header
-            title="JS Error Lab"
-            subtitle="Debug and analyze JavaScript errors in real-time. Click on errors to view details."
-          />
-        </motion.div>
-
-        {/* Error Sections, Console, and History */}
-        <motion.div 
-          className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-        >
-          {/* Left Column: Error Categories */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Uncaught Errors */}
-            <ErrorSection
-              title="Uncaught Errors"
-              description="Direct errors thrown during execution"
-              errors={mockErrors.uncaught}
-              onErrorSelect={handleErrorClick}
-              selectedErrorId={selectedError?.id}
-              icon="💥"
+      <main className="flex-1 px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mx-auto max-w-7xl">
+          {/* Page Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="mb-10"
+          >
+            <Header
+              title="JS Error Lab"
+              subtitle="Debug and analyze JavaScript errors in real-time. Click on errors to view details."
             />
+          </motion.div>
 
-            {/* Promise Errors */}
-            <ErrorSection
-              title="Promise Rejections"
-              description="Unhandled promise rejections and async errors"
-              errors={mockErrors.promise}
-              onErrorSelect={handleErrorClick}
-              selectedErrorId={selectedError?.id}
+          {/* Error Sections, Console, and History */}
+          <motion.div 
+            className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
+          >
+            {/* Left Column: Error Categories */}
+            <div className="lg:col-span-2 space-y-8">
+              {/* Uncaught Errors */}
+              <ErrorSection
+                title="Uncaught Errors"
+                description="Direct errors thrown during execution"
+                errors={mockErrors.uncaught}
+                onErrorSelect={handleErrorClick}
+                selectedErrorId={selectedError?.id}
+                icon="💥"
+              />
+
+              {/* Promise Errors */}
+              <ErrorSection
+                title="Promise Rejections"
+                description="Unhandled promise rejections and async errors"
+                errors={mockErrors.promise}
+                onErrorSelect={handleErrorClick}
+                selectedErrorId={selectedError?.id}
               icon="⚡"
             />
 
@@ -332,41 +333,45 @@ function App() {
             />
           </div>
 
-          {/* Middle Column: Console Output */}
-          <div className="lg:col-span-1">
-            <ConsolePanel 
-              selectedError={selectedError} 
-              capturedError={capturedError}
-              isLoading={isLoading}
-              onCopy={handleCopy}
-            />
-          </div>
+          {/* Middle & Right Columns: Console and History */}
+          <div className="lg:col-span-3 space-y-8">
+            {/* Console Output - Takes full width */}
+            <div className="h-full min-h-96">
+              <ConsolePanel 
+                selectedError={selectedError} 
+                capturedError={capturedError}
+                isLoading={isLoading}
+                onCopy={handleCopy}
+              />
+            </div>
 
-          {/* Right Column: Error History */}
-          <div className="lg:col-span-1">
-            <ErrorHistory
-              errors={errorHistory}
-              onSelectError={(error) => {
-                setCapturedError(error)
-                setSelectedError(null)
-              }}
-              onClearHistory={() => setErrorHistory([])}
-              selectedErrorId={capturedError?.id}
-            />
+            {/* Error History */}
+            <div className="h-full min-h-72">
+              <ErrorHistory
+                errors={errorHistory}
+                onSelectError={(error) => {
+                  setCapturedError(error)
+                  setSelectedError(null)
+                }}
+                onClearHistory={() => setErrorHistory([])}
+                selectedErrorId={capturedError?.id}
+              />
+            </div>
           </div>
         </motion.div>
+        </div>
       </main>
 
       {/* Footer */}
       <motion.footer 
-        className="border-t border-border/50 bg-card/40 backdrop-blur-sm"
+        className="border-t border-emerald-500/10 bg-gradient-to-r from-slate-950/80 via-slate-900 to-slate-950/80"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <div className="text-center text-sm text-muted-foreground">
-            <p>JS Error Lab © 2024 • Built with React, Tailwind CSS, and Framer Motion</p>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center text-xs text-slate-500 uppercase tracking-wider font-medium">
+            <p>JS Error Lab © 2024 • Built with React, TypeScript, Tailwind CSS & Framer Motion</p>
           </div>
         </div>
       </motion.footer>
